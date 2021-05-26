@@ -1,0 +1,50 @@
+version: '2.2'
+services:
+  test:
+    container_name: sample-test
+    build:
+      context: .
+      dockerfile: docker/test/Dockerfile
+    env_file:
+      - .env.docker
+    depends_on:
+      - mysql
+    volumes:
+      - ./:/app
+    working_dir: /app
+
+  api:
+    container_name: sample
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    ports:
+      - "9000:9000"
+    env_file:
+      - .env.docker
+    depends_on:
+      - mysql
+    volumes:
+      - ./:/app
+    working_dir: /app
+
+  mysql:
+    container_name: sample-db
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: sample
+      MYSQL_USER: root
+
+  dockerize:
+    image: jwilder/dockerize:0.6.1
+    depends_on:
+      - mysql
+    command: dockerize
+
+  dbmate:
+    image: amacneil/dbmate:v1.9.0
+    env_file:
+      - .env.docker.migrate
+    volumes:
+      - ./db:/db

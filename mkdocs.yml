@@ -1,0 +1,8 @@
+site_name: sample
+site_discription: sample written by Go
+
+nav:
+  - Overview: index.md
+
+plugins:
+  - techdocs-core

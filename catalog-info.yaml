@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: sample
+  title: sample
+  description: |
+    Template Project for Go API Backend Server
+  annotations:
+    github.com/project-slug: ispec-inc/sample
+    backstage.io/techdocs-ref: github:https://github.com/ispec-inc/sample
+  tags:
+    - recommended
+    - golang
+spec:
+  type: service
+  owner: yamad07
+  lifecycle: experimental
