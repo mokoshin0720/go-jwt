@@ -21,7 +21,7 @@ func NewUserFromModel(m model.User) User {
 		ID: m.ID,
 		Name: m.Name,
 		Email: m.Email,
-		Password: m.Email,
+		Password: m.Password,
 	}
 }
 

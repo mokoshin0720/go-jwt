@@ -9,3 +9,16 @@ type FindNameInput struct {
 type AddNameInput struct {
 	User model.User
 }
+
+type FindPasswordInput struct {
+	Email string
+}
+
+type JwtLoginInput struct {
+	Email    string
+	Password string
+}
+
+type LoginUserInput struct {
+	TokenString string
+}

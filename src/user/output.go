@@ -9,3 +9,15 @@ type FindNameOutput struct {
 type AddNameOutput struct {
 	User model.User
 }
+
+type FindPasswordOutput struct {
+	User model.User
+}
+
+type JwtLoginOutput struct {
+	User model.User
+}
+
+type LoginUserOutput struct {
+	User model.User
+}
