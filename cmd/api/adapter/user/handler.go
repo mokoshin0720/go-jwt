@@ -99,13 +99,9 @@ func (h handler) GetJwt(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u := model.User{
+	inp := user.JwtLoginInput{
 		Email: request.Email,
 		Password: request.Password,
-	}
-	inp := user.JwtLoginInput{
-		Email: u.Email,
-		Password: u.Password,
 	}
 
 	out, aerr := h.usecase.JwtLogin(inp)
@@ -114,15 +110,10 @@ func (h handler) GetJwt(w http.ResponseWriter, r *http.Request) {
 		return 
 	}
 
-	// viewからjwtを取得してjsonに変換
-	tokenString, jerr := CreateToken(out)
-	if jerr != nil {
-		presenter.Response(w, jerr.Error())
-	}
 	res := GetJWTResponse{
-		Token: tokenString,
+		Token: out.Token,
 	}
-	// JWTを返す
+
 	presenter.Response(w, res)
 }
 

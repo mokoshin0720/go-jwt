@@ -1,10 +1,13 @@
 package user
 
 import (
+	"fmt"
+
 	"github.com/ispec-inc/sample/pkg/apperror"
 	"github.com/ispec-inc/sample/pkg/domain/repository"
 	"github.com/ispec-inc/sample/pkg/password"
 	"github.com/ispec-inc/sample/pkg/registry"
+	"github.com/ispec-inc/sample/pkg/value"
 )
 
 type Usecase struct {
@@ -50,12 +53,39 @@ func (use Usecase) AddName(inp AddNameInput) (out AddNameOutput, aerr apperror.E
 	return out, nil
 }
 
+// func (use Usecase) JwtLogin(inp JwtLoginInput) (out JwtLoginOutput, aerr apperror.Error) {
+// 	u, aerr := use.user.Publish(inp.Email, inp.Password)
+// 	if aerr != nil {
+// 		return 
+// 	}
+// 	out.User = u
+	
+// 	return out, nil
+// }
+
+// EmailとPasswordからString(token)を生成
 func (use Usecase) JwtLogin(inp JwtLoginInput) (out JwtLoginOutput, aerr apperror.Error) {
-	u, aerr := use.user.Publish(inp.Email, inp.Password)
+	// 指定したEmailをもつUserが存在するかどうか
+	u, aerr := use.user.FindByEmail(inp.Email)
 	if aerr != nil {
 		return 
 	}
-	out.User = u
+	
+	// ハッシュ化されたDB上のパスワードと、inp.Passwordをハッシュ化したものを比較
+	ok := password.Compare(u.Password, inp.Password)
+	if !ok {
+		aerr = apperror.New(apperror.CodeInvalid, fmt.Errorf("パスワードが正しくありません。"))
+		return
+	}
+
+	claims := value.NewClaims(u)
+	token, err := value.NewToken(claims)
+	if err != nil {
+		aerr = apperror.New(apperror.CodeError, err)
+		return
+	}
+
+	out.Token = token.String()
 	
 	return out, nil
 }

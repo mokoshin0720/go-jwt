@@ -15,7 +15,7 @@ type FindPasswordOutput struct {
 }
 
 type JwtLoginOutput struct {
-	User model.User
+	Token string
 }
 
 type LoginUserOutput struct {
