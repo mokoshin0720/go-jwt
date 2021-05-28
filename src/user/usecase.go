@@ -53,16 +53,6 @@ func (use Usecase) AddName(inp AddNameInput) (out AddNameOutput, aerr apperror.E
 	return out, nil
 }
 
-// func (use Usecase) JwtLogin(inp JwtLoginInput) (out JwtLoginOutput, aerr apperror.Error) {
-// 	u, aerr := use.user.Publish(inp.Email, inp.Password)
-// 	if aerr != nil {
-// 		return 
-// 	}
-// 	out.User = u
-	
-// 	return out, nil
-// }
-
 // EmailとPasswordからString(token)を生成
 func (use Usecase) JwtLogin(inp JwtLoginInput) (out JwtLoginOutput, aerr apperror.Error) {
 	// 指定したEmailをもつUserが存在するかどうか

@@ -124,7 +124,6 @@ func (h handler) Restricted(w http.ResponseWriter, r *http.Request) {
 		presenter.BadRequestError(w, err)
 		return
 	}
-
 	// validationのエラーハンドリング
 	validate := validator.New()
 	if err := validate.Struct(request); err != nil {

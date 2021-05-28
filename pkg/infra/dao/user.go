@@ -75,26 +75,6 @@ func (repo User) Create(mu model.User) apperror.Error {
 	return nil
 }
 
-func (repo User) Publish(email string, password string) (model.User, apperror.Error) {
-	var u entity.User
-	
-	// Emailを持つUserが存在しているかどうかのエラーハンドリング
-	if err := repo.db.Where("email = ?", email).First(&u).Error; err != nil {
-		return model.User{}, newGormError(
-			err, "指定したEmailをもつユーザーが存在しません。",
-		)
-	}
-
-	// EmailとPasswordが一致するかどうかのハンドリング
-	if err := repo.db.Where("email = ? AND password = ?", email, password).First(&u).Error; err != nil {
-		return model.User{}, newGormError(
-			err, "メールアドレスとパスワードが一致しません。",
-		)
-	}
-
-	return u.ToModel(), nil
-}
-
 func (repo User) ParseToken(tokenString string) (model.User, apperror.Error) {
 	var u entity.User
 
