@@ -67,6 +67,7 @@ require (
 	github.com/tanimutomo/sqlfile v1.0.0
 	go.opencensus.io v0.22.5 // indirect
 	golang.org/x/build v0.0.0-20201030074411-3b7f1150099d // indirect
+	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
 	golang.org/x/image v0.0.0-20200927104501-e162460cd6b5 // indirect
 	golang.org/x/mobile v0.0.0-20200801112145-973feb4309de // indirect
 	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e // indirect

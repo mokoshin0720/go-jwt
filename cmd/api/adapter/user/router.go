@@ -11,7 +11,7 @@ func NewRouter(handler handler) http.Handler {
 	r.Get("/{id}", handler.GetName)
 	r.Post("/", handler.AddName)
 	r.Get("/{email:[a-z-]+}", handler.GetPassword)
-	r.Post("/getjwt", handler.GetJwt)
+	r.Post("/jwt", handler.GetJwt)
 	r.Post("/private", handler.Restricted)
 	return r
 }

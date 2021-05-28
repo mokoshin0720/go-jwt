@@ -18,18 +18,18 @@ type User struct {
 
 func NewUserFromModel(m model.User) User {
 	return User{
-		ID: m.ID,
-		Name: m.Name,
-		Email: m.Email,
+		ID:       m.ID,
+		Name:     m.Name,
+		Email:    m.Email,
 		Password: m.Password,
 	}
 }
 
 func (u User) ToModel() model.User {
 	return model.User{
-		ID: u.ID,
-		Name: u.Name,
-		Email: u.Email,
+		ID:       u.ID,
+		Name:     u.Name,
+		Email:    u.Email,
 		Password: u.Password,
 	}
 }

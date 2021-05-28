@@ -62,7 +62,6 @@ func (h handler) AddName(w http.ResponseWriter, r *http.Request) {
 	}
 
 	u := model.User{
-		ID: request.ID,
 		Name: request.Name,
 		Email: request.Email,
 		Password: request.Password,
@@ -80,6 +79,7 @@ func (h handler) AddName(w http.ResponseWriter, r *http.Request) {
 	res := AddNameResponse{
 		UserName: ures,
 	}
+
 	presenter.Response(w, res)
 }
 
