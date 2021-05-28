@@ -51,10 +51,12 @@ func (h handler) GetName(w http.ResponseWriter, r * http.Request) {
 
 func (h handler) AddName(w http.ResponseWriter, r *http.Request) {
 	var request addNameRequest
+	// jsonに変換できるかどうか
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		presenter.BadRequestError(w, err)
 		return 
 	}
+	// validationに関するエラー
 	validate := validator.New()
 	if err := validate.Struct(request); err != nil {
 		presenter.BadRequestError(w, err)
@@ -83,33 +85,13 @@ func (h handler) AddName(w http.ResponseWriter, r *http.Request) {
 	presenter.Response(w, res)
 }
 
-func (h handler) GetPassword(w http.ResponseWriter, r * http.Request) {
-	email := chi.URLParam(r, "email")
-
-	inp := user.FindPasswordInput{
-		Email: email,
-	}
-
-	out, aerr := h.usecase.FindPassword(inp)
-	if aerr != nil {
-		presenter.ApplicationException(w, aerr)
-	}
-
-	ures := view.NewUserName(out.User)
-	res := GetPasswordResponse{
-		UserPassword: ures,
-	}
-	presenter.Response(w, res)
-}
-
 func (h handler) GetJwt(w http.ResponseWriter, r *http.Request) {
 	var request jwtRequest
-	// requestのbodyに関するエラーハンドリング
+	// jsonに関するエラーハンドリング
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		presenter.BadRequestError(w, err)
 		return
 	}
-
 	// requestのvalidateに関するエラーハンドリング
 	validate := validator.New()
 	if err := validate.Struct(request); err != nil {
@@ -121,7 +103,6 @@ func (h handler) GetJwt(w http.ResponseWriter, r *http.Request) {
 		Email: request.Email,
 		Password: request.Password,
 	}
-
 	inp := user.JwtLoginInput{
 		Email: u.Email,
 		Password: u.Password,

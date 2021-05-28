@@ -50,15 +50,6 @@ func (use Usecase) AddName(inp AddNameInput) (out AddNameOutput, aerr apperror.E
 	return out, nil
 }
 
-func (use Usecase) FindPassword(inp FindPasswordInput) (out FindPasswordOutput, aerr apperror.Error) {
-	u, aerr := use.user.EmailPass(inp.Email)
-	if aerr != nil {
-		return 
-	}
-	out.User = u
-	return out, nil
-}
-
 func (use Usecase) JwtLogin(inp JwtLoginInput) (out JwtLoginOutput, aerr apperror.Error) {
 	u, aerr := use.user.Publish(inp.Email, inp.Password)
 	if aerr != nil {

@@ -47,17 +47,19 @@ func (repo User) Create(mu model.User) apperror.Error {
 	f := func(tx *gorm.DB) apperror.Error {
 		var us []entity.User
 		err := tx.
-			Set("gorm:query_option", "for update").
+			Set("gorm:query_option", "for update"). // select時に行をロックする
 			Find(&us, "email = ?", mu.Email).
 			Error
 		if err != nil {
 			return newGormError(err, "error searching user in database")
 		}
 
+		// 指定したEmailをもつUserがすでにいる場合
 		if len(us) > 0 {
 			return apperror.New(apperror.CodeInvalid, errors.New("error: user email is already exists"))
 		}
 
+		// 指定したEmailをもつUserを作成
 		u := entity.NewUserFromModel(mu)
 		if err := tx.Create(&u).Error; err != nil {
 			return newGormError(err, "error inserting user in database")
@@ -71,19 +73,6 @@ func (repo User) Create(mu model.User) apperror.Error {
 	}
 
 	return nil
-}
-
-
-func (repo User) EmailPass(email string) (model.User, apperror.Error) {
-	var u entity.User
-
-	// 引数のEmailを持つUserが存在しなければエラーを返す
-	if err := repo.db.Where("email = ?", email).First(&u).Error; err != nil {
-		return model.User{}, newGormError(
-			err, "error searching user with email in database",
-		)
-	}
-	return u.ToModel(), nil
 }
 
 func (repo User) Publish(email string, password string) (model.User, apperror.Error) {
