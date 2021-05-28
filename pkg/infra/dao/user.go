@@ -2,9 +2,7 @@ package dao
 
 import (
 	"errors"
-	"os"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/ispec-inc/sample/pkg/apperror"
 	"github.com/ispec-inc/sample/pkg/domain/model"
 	"github.com/ispec-inc/sample/pkg/infra/entity"
@@ -24,7 +22,7 @@ func NewUser(db *gorm.DB) User {
 func (repo User) Find(id int64) (model.User, apperror.Error) {
 	var u entity.User
 	// 引数のidを持つUserが存在しなければエラーを返す
-	if err := repo.db.First(&u, "id = ?",id).Error; err != nil {
+	if err := repo.db.First(&u, "id = ?", id).Error; err != nil {
 		return model.User{}, newGormError(
 			err, "error searching user in database（dao/findだよ）",
 		)
@@ -73,31 +71,4 @@ func (repo User) Create(mu model.User) apperror.Error {
 	}
 
 	return nil
-}
-
-func (repo User) ParseToken(tokenString string) (model.User, apperror.Error) {
-	var u entity.User
-
-	// tokenの解析
-	claims := jwt.MapClaims{}
-	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("SIGNINKEY")), nil
-	})
-
-	// tokenに関するエラーハンドリング
-	if !token.Valid {
-		return model.User{}, newGormError(
-			err, "tokenが正しくありません。",
-		)
-	}
-
-	// tokenのUserが存在するかどうか
-	id := claims["id"]
-	if err := repo.db.First(&u, id).Error; err != nil {
-		return model.User{}, newGormError(
-			err, "tokenのユーザーが存在しません。",
-		)
-	}
-
-	return u.ToModel(), nil
 }

@@ -81,10 +81,20 @@ func (use Usecase) JwtLogin(inp JwtLoginInput) (out JwtLoginOutput, aerr apperro
 }
 
 func (use Usecase) LoginUser(inp LoginUserInput)(out LoginUserOutput, aerr apperror.Error) {
-	u, aerr := use.user.ParseToken(inp.TokenString)
+	// Tokenを渡すとユーザーのEmailを返してくれる
+	email, err := value.Parse(inp.TokenString)
+	if err != nil {
+		aerr = apperror.New(apperror.CodeError, err)
+		return
+	}
+
+	// tokenユーザーがいるかどうか
+	u, aerr := use.user.FindByEmail(email)
 	if aerr != nil {
 		return 
 	}
+
 	out.User = u
+
 	return out, nil
 }
