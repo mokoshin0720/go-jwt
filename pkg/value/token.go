@@ -1,6 +1,7 @@
 package value
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
@@ -17,21 +18,25 @@ func NewToken(claims Claims) (Token, error) {
 	return Token(tokenString), nil
 }
 
-func Parse(tokenString string) (string, error) {
+func Parse(tokenString string) (*Claims, error) {
 	// tokenの解析
-	claims := jwt.MapClaims{}
-	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
 		return []byte(os.Getenv("SIGNINKEY")), nil
 	})
 	// tokenに関するエラーハンドリング
 	if err != nil {
-		return "", err 
+		return nil, err 
 	}
 
-	// tokenからemailの取得 → もっといい方法がある気がする...
-	email := token.Claims.(jwt.MapClaims)["User"].(map[string]interface{})["Email"]
+	claims, ok := token.Claims.(*Claims)
+	if !(ok && token.Valid) {
+		return nil, fmt.Errorf(("invalid Claims"))
+	}
 
-	return email.(string), nil
+	return claims, nil
 }
 
 // tokenをstringに変換するメソッド

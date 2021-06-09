@@ -5,15 +5,15 @@ import (
 )
 
 type GetNameResponse struct {
-	UserName view.UserName `json:"user_name"`
+	UserName view.UserName `json:"user"`
 }
 
 type AddNameResponse struct {
-	UserName view.UserName `json:"user_name"`
+	UserName view.UserName `json:"user"`
 }
 
 type GetPasswordResponse struct {
-	UserPassword view.UserName `json:"user_name"`
+	UserPassword view.UserName `json:"user"`
 }
 
 type GetJWTResponse struct {
