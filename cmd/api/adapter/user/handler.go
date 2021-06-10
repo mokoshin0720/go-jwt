@@ -2,6 +2,7 @@ package user
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -24,6 +25,7 @@ func NewHandler(repo registry.Repository) handler {
 }
 
 func (h handler) GetName(w http.ResponseWriter, r * http.Request) {
+	fmt.Println(r)
 	// URLのパラメータからidを抽出
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
